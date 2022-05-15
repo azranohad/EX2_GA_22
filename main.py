@@ -209,14 +209,16 @@ def get_avg_fitness(population):
 def generation_loop(init_population, num_of_generation, elite_percent, random_mix = False):
     next_population = init_population.copy()
     avg_fitness_list = []
+    best_fitness = []
     for i in range(num_of_generation):
         next_population = transfer_generation(next_population, elite_percent, random_mix)
         avg_fitness_list.append(get_avg_fitness(next_population))
+        best_fitness.append(next_population[0][1])
 
         if next_population[0][1] == 0:
-            return next_population[0][0], avg_fitness_list, next_population
+            return next_population[0][0], avg_fitness_list, best_fitness, next_population
 
-    return next_population[0][0], avg_fitness_list, next_population
+    return next_population[0][0], avg_fitness_list, best_fitness, next_population
 
 
 
@@ -230,57 +232,40 @@ def start():
 
     next_population = population.copy()
 
-    best_board, avg_fitness_list, next_population = generation_loop(next_population, 10000, 50)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(next_population, 10000, 30)
     fitness_best_board = get_fitness(best_board)
-    if fitness_best_board == 0:
-        print_board(best_board)
-        print(len(avg_fitness_list), fitness_best_board)
-        return best_board
-
-
-    best_board, avg_fitness_list, next_population = generation_loop(population.copy(), 10000, 30, True)
-    fitness_best_board = get_fitness(best_board)
+    print(len(avg_fitness_list), fitness_best_board, 'part 1')
     print_board(best_board)
-    print(len(avg_fitness_list), fitness_best_board)
     if fitness_best_board == 0:
         return best_board
-
-    best_board, avg_fitness_list, next_population = generation_loop(population.copy(), 10000, 20, True)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 30, True)
     fitness_best_board = get_fitness(best_board)
+    print(len(avg_fitness_list), fitness_best_board, 'part 2')
     print_board(best_board)
-    print(len(avg_fitness_list), fitness_best_board)
     if fitness_best_board == 0:
         return best_board
 
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 20, True)
     fitness_best_board = get_fitness(best_board)
-    print(len(avg_fitness_list), fitness_best_board)
-    return best_board
+    print(len(avg_fitness_list), fitness_best_board, 'part 3')
+    print_board(best_board)
+    if fitness_best_board == 0:
+        return best_board
 
 
 
-
-
-
-
-
-
-
-size_of_matrix = 7
-given_digits = 2
+size_of_matrix = 5
 given_digits_details = ['124', '332']
+given_digits = len(given_digits_details)
 greater_than = ['1112', '1424', '2223', '3444', '4535', '4454', '5545', '5251']
 number_of_greater_than = len(greater_than)
+
 init_digits_dict = {}
 set_init_digits_dict()
 generic_row = []    #[1,2,3,4,5....]
 for i in range(size_of_matrix):
     generic_row.append(i + 1)
 
-
 start()
 
-# get_fitness(population[0])
-# set_board_print(population[0])
-
-x = 3
 
