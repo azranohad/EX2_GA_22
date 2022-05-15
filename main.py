@@ -2,6 +2,7 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import csv
 import random
 import statistics
 
@@ -222,10 +223,25 @@ def generation_loop(init_population, num_of_generation, elite_percent, random_mi
 
 
 
+def write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, strategy, part):
+    row_to_csv = []
+    row_to_csv.append("size of matrix:" + str(size_of_matrix))
+    row_to_csv.append("difficulty:" + difficulty)
+    row_to_csv.append(strategy)
+    writer.writerow(row_to_csv)
+
+    row_to_csv = []
+    row_to_csv.append(len(avg_fitness_list))
+    row_to_csv.append(fitness_best_board)
+    row_to_csv.append(part)
+    writer.writerow(row_to_csv)
+    writer.writerow(avg_fitness_list)
+    writer.writerow(best_fitness)
 
 def start():
 
     population = []
+
     for i in range(100):
         random_board = create_first_gen_board()
         population.append((random_board, get_fitness(random_board)))
@@ -236,12 +252,15 @@ def start():
     best_board, avg_fitness_list, best_fitness, next_population = generation_loop(next_population, 10000, 30)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 1')
+    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 1')
     print_board(best_board)
     if fitness_best_board == 0:
         return best_board
+
     best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 30, True)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 2')
+    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 2')
     print_board(best_board)
     if fitness_best_board == 0:
         return best_board
@@ -249,13 +268,18 @@ def start():
     best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 20, True)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 3')
+    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 3')
     print_board(best_board)
     if fitness_best_board == 0:
         return best_board
 
 
+
+file = open('C:\\Users\\amiti\\EX2_CA\\result.csv', 'w', newline='')
+writer = csv.writer(file)
 #####################5 easy##################################
 size_of_matrix = 5
+difficulty = "easy"
 given_digits_details = ['143']
 given_digits = len(given_digits_details)
 greater_than = ['1413', '1415', '2111', '2223', '2425', '3343', '3545', '4151', '5352']
@@ -270,6 +294,8 @@ start()
 
 #####################5 tricky##################################
 size_of_matrix = 5
+difficulty = "tricky"
+
 given_digits_details = ['122', '552']
 given_digits = len(given_digits_details)
 greater_than = ['1211', '1514', '2535', '3231', '4151', '4342', '5545', '5152', '5453']
@@ -285,6 +311,8 @@ start()
 
 #####################6 easy##################################
 size_of_matrix = 6
+difficulty = "easy"
+
 given_digits_details = ['321', '411', '554', '614', '622', '625']
 given_digits = len(given_digits_details)
 greater_than = ['1112', '3424', '3525', '3334', '3435', '4252', '5545', '5554', '5464']
@@ -299,6 +327,8 @@ start()
 
 #####################6 tricky##################################
 size_of_matrix = 6
+difficulty = "tricky"
+
 given_digits_details = ['155', '331', '514']
 given_digits = len(given_digits_details)
 greater_than = ['2111', '2212', '2425', '3423', '2636', '3141', '3545', '4636', '4142', '4555', '5646', '5453', '6362']
@@ -313,6 +343,8 @@ start()
 
 #####################7 easy##################################
 size_of_matrix = 7
+difficulty = "easy"
+
 given_digits_details = ['116', '152']
 given_digits = len(given_digits_details)
 greater_than = ['1415', '1716', '1626', '2221', '2423', '3424', '3233', '3343', '3536', '3747', '5343', '4546','5455' \
@@ -328,6 +360,8 @@ start()
 
 #####################7 tricky##################################
 size_of_matrix = 7
+difficulty = "tricky"
+
 given_digits_details = ['175', '263', '373', '413']
 given_digits = len(given_digits_details)
 greater_than = ['1121', '1413', '1516', '2322', '3323', '3536', '4636', '5141', '4252', '4342', '4546', '5747','5251' \
@@ -340,3 +374,5 @@ for i in range(size_of_matrix):
     generic_row.append(i + 1)
 
 start()
+
+file.close()
