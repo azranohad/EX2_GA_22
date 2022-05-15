@@ -224,6 +224,7 @@ def generation_loop(init_population, num_of_generation, elite_percent, random_mi
 
 
 def start():
+
     population = []
     for i in range(100):
         random_board = create_first_gen_board()
@@ -253,11 +254,25 @@ def start():
         return best_board
 
 
-
+#####################5 easy##################################
 size_of_matrix = 5
-given_digits_details = ['124', '332']
+given_digits_details = ['143']
 given_digits = len(given_digits_details)
-greater_than = ['1112', '1424', '2223', '3444', '4535', '4454', '5545', '5251']
+greater_than = ['1413', '1415', '2111', '2223', '2425', '3343', '3545', '4151', '5352']
+number_of_greater_than = len(greater_than)
+init_digits_dict = {}
+set_init_digits_dict()
+generic_row = []    #[1,2,3,4,5....]
+for i in range(size_of_matrix):
+    generic_row.append(i + 1)
+
+start()
+
+#####################5 tricky##################################
+size_of_matrix = 5
+given_digits_details = ['122', '552']
+given_digits = len(given_digits_details)
+greater_than = ['1211', '1514', '2535', '3231', '4151', '4342', '5545', '5152', '5453']
 number_of_greater_than = len(greater_than)
 
 init_digits_dict = {}
@@ -268,4 +283,60 @@ for i in range(size_of_matrix):
 
 start()
 
+#####################6 easy##################################
+size_of_matrix = 6
+given_digits_details = ['321', '411', '554', '614', '622', '625']
+given_digits = len(given_digits_details)
+greater_than = ['1112', '3424', '3525', '3334', '3435', '4252', '5545', '5554', '5464']
+number_of_greater_than = len(greater_than)
+init_digits_dict = {}
+set_init_digits_dict()
+generic_row = []    #[1,2,3,4,5....]
+for i in range(size_of_matrix):
+    generic_row.append(i + 1)
 
+start()
+
+#####################6 tricky##################################
+size_of_matrix = 6
+given_digits_details = ['155', '331', '514']
+given_digits = len(given_digits_details)
+greater_than = ['2111', '2212', '2425', '3423', '2636', '3141', '3545', '4636', '4142', '4555', '5646', '5453', '6362']
+number_of_greater_than = len(greater_than)
+init_digits_dict = {}
+set_init_digits_dict()
+generic_row = []    #[1,2,3,4,5....]
+for i in range(size_of_matrix):
+    generic_row.append(i + 1)
+
+start()
+
+#####################7 easy##################################
+size_of_matrix = 7
+given_digits_details = ['116', '152']
+given_digits = len(given_digits_details)
+greater_than = ['1415', '1716', '1626', '2221', '2423', '3424', '3233', '3343', '3536', '3747', '5343', '4546','5455' \
+                , '6454', '6555', '5666', '6263', '6364', '6676', '6777', '7271', '7374', '7576']
+number_of_greater_than = len(greater_than)
+init_digits_dict = {}
+set_init_digits_dict()
+generic_row = []    #[1,2,3,4,5....]
+for i in range(size_of_matrix):
+    generic_row.append(i + 1)
+
+start()
+
+#####################7 tricky##################################
+size_of_matrix = 7
+given_digits_details = ['175', '263', '373', '413']
+given_digits = len(given_digits_details)
+greater_than = ['1121', '1413', '1516', '2322', '3323', '3536', '4636', '5141', '4252', '4342', '4546', '5747','5251' \
+                , '5253', '5363', '5565', '5655', '6757', '6171', '6162', '7767', '7475', '7576']
+number_of_greater_than = len(greater_than)
+init_digits_dict = {}
+set_init_digits_dict()
+generic_row = []    #[1,2,3,4,5....]
+for i in range(size_of_matrix):
+    generic_row.append(i + 1)
+
+start()
