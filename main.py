@@ -1,10 +1,7 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import copy
 import csv
 import random
-import statistics
 
 
 def split_digit_details(str_digit_detail):
@@ -98,7 +95,7 @@ def get_row_mismatch(board):
         for j in range(size_of_matrix):
             row.add(board[i][j])
         if len(row) != size_of_matrix:
-            fitness += 1
+            fitness += 2
 
     return fitness
 
@@ -144,6 +141,7 @@ def get_fitness(board):
     fitness += get_init_digits_mismatch(board)
     fitness += get_col_mismatch(board)
     fitness += get_greater_than_mismatch(board)
+    fitness += get_row_mismatch(board)
 
     return fitness
 
@@ -170,6 +168,46 @@ def get_crossover_board(board_a, board_b, num_row_from_board_b):
 
     return crossover_board
 
+
+def optim_population(population):
+    next_population = []
+    for element in population:
+        optim_board = copy.deepcopy(element[0])
+        board = element[0]
+        for str_greater_sign in greater_than:
+            row_great = int(str_greater_sign[0]) - 1
+            col_great = int(str_greater_sign[1]) - 1
+            row_small = int(str_greater_sign[2]) - 1
+            col_small = int(str_greater_sign[3]) - 1
+
+            if board[row_great][col_great] <= board[row_small][col_small]:
+                optim_board[row_great][col_great] = board[row_small][col_small]
+                optim_board[row_small][col_small] = board[row_great][col_great]
+        board_with_fitness = (optim_board, get_fitness(optim_board))
+        next_population.append(board_with_fitness)
+
+    return next_population
+    # next_population = []
+    # for board in population:
+    #     optim_board = board[0].copy()
+    #     for j in range(size_of_matrix):
+    #         count_array = []
+    #         col_array = []
+    #         for c in range(size_of_matrix): count_array.append(0)
+    #         for i in range(size_of_matrix):
+    #             last_val = board[0][i][j]-1
+    #             count_array[last_val] = count_array[last_val] + 1
+    #             col_array.append(board[0][i][j])
+    #
+    #
+    #         if min(count_array) == 0:
+    #             miss_val = count_array.index(0)+1
+    #             over_val = count_array.index(max(count_array))+1
+    #             optim_board[col_array.index(over_val)][j] = miss_val
+    #     next_population.append((optim_board, get_fitness(optim_board)))
+    # return next_population
+
+
 def transfer_generation(population, elite, random_mix = False):
     elite_percent = elite
     next_population = []
@@ -194,9 +232,13 @@ def transfer_generation(population, elite, random_mix = False):
         if tuple_crossover_board not in next_population:
             next_population.append(tuple_crossover_board)
 
-
-    next_population.sort(key=lambda x: x[1])
-    return next_population
+    # darwin = optim_population(next_population)
+    # darwin.sort(key=lambda x: x[1])
+    # if darwin[0][1] == 0:
+    #     return darwin
+    next_population1 = optim_population(next_population)
+    next_population1.sort(key=lambda x: x[1])
+    return next_population1
 
 def get_avg_fitness(population):
     sum_fitness = 0
@@ -239,7 +281,7 @@ def write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, strategy, p
     writer.writerow(best_fitness)
 
 def start():
-
+    print('size of matrix: ' + str(size_of_matrix) + ", difficulty: " + difficulty)
     population = []
 
     for i in range(100):
@@ -252,30 +294,36 @@ def start():
     best_board, avg_fitness_list, best_fitness, next_population = generation_loop(next_population, 10000, 30)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 1')
+    print(avg_fitness_list)
+    print(best_fitness)
     write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 1')
-    print_board(best_board)
     if fitness_best_board == 0:
+        print_board(best_board)
         return best_board
 
-    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 30, True)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 25, True)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 2')
+    print(avg_fitness_list)
+    print(best_fitness)
     write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 2')
-    print_board(best_board)
     if fitness_best_board == 0:
+        print_board(best_board)
         return best_board
 
-    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 20, True)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 45, True)
     fitness_best_board = get_fitness(best_board)
     print(len(avg_fitness_list), fitness_best_board, 'part 3')
+    print(avg_fitness_list)
+    print(best_fitness)
     write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 3')
-    print_board(best_board)
     if fitness_best_board == 0:
+        print_board(best_board)
         return best_board
 
 
 
-file = open('C:\\Users\\amiti\\EX2_CA\\result.csv', 'w', newline='')
+file = open('result.csv', 'w', newline='')
 writer = csv.writer(file)
 #####################5 easy##################################
 size_of_matrix = 5
@@ -284,12 +332,13 @@ given_digits_details = ['143']
 given_digits = len(given_digits_details)
 greater_than = ['1413', '1415', '2111', '2223', '2425', '3343', '3545', '4151', '5352']
 number_of_greater_than = len(greater_than)
+
 init_digits_dict = {}
 set_init_digits_dict()
 generic_row = []    #[1,2,3,4,5....]
 for i in range(size_of_matrix):
     generic_row.append(i + 1)
-
+print('size_of_matrix:' + str(size_of_matrix) +', dificault: easy, genetic/darwin/lemark')
 start()
 
 #####################5 tricky##################################
