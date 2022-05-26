@@ -208,7 +208,7 @@ def optim_population(population):
     # return next_population
 
 
-def transfer_generation(population, elite, random_mix = False):
+def transfer_generation(population, elite,flag, random_mix = False):
     elite_percent = elite
     next_population = []
     elite_index = 0
@@ -231,14 +231,21 @@ def transfer_generation(population, elite, random_mix = False):
         tuple_crossover_board = (crossover_board, get_fitness(crossover_board))
         if tuple_crossover_board not in next_population:
             next_population.append(tuple_crossover_board)
-
-    # darwin = optim_population(next_population)
-    # darwin.sort(key=lambda x: x[1])
-    # if darwin[0][1] == 0:
-    #     return darwin
-    next_population1 = optim_population(next_population)
-    next_population1.sort(key=lambda x: x[1])
-    return next_population1
+    if flag == 0:
+        next_population.sort(key=lambda x: x[1])
+        return next_population
+    elif flag == 1:
+        next_population1 = optim_population(next_population)
+        next_population1.sort(key=lambda x: x[1])
+        return next_population1
+    else:
+        darwin = optim_population(next_population)
+        darwin.sort(key=lambda x: x[1])
+        if darwin[0][1] == 0:
+            return darwin
+        next_population1 = optim_population(next_population)
+        next_population1.sort(key=lambda x: x[1])
+        return next_population1
 
 def get_avg_fitness(population):
     sum_fitness = 0
@@ -249,12 +256,12 @@ def get_avg_fitness(population):
 
 
 
-def generation_loop(init_population, num_of_generation, elite_percent, random_mix = False):
+def generation_loop(init_population, num_of_generation, elite_percent,flag, random_mix = False):
     next_population = init_population.copy()
     avg_fitness_list = []
     best_fitness = []
     for i in range(num_of_generation):
-        next_population = transfer_generation(next_population, elite_percent, random_mix)
+        next_population = transfer_generation(next_population, elite_percent,flag ,random_mix)
         avg_fitness_list.append(get_avg_fitness(next_population))
         best_fitness.append(next_population[0][1])
 
@@ -280,8 +287,8 @@ def write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, strategy, p
     writer.writerow(avg_fitness_list)
     writer.writerow(best_fitness)
 
-def start():
-    print('size of matrix: ' + str(size_of_matrix) + ", difficulty: " + difficulty)
+def start(flag):
+    #print('size of matrix: ' + str(size_of_matrix) + ", difficulty: " + difficulty)
     population = []
 
     for i in range(100):
@@ -291,137 +298,175 @@ def start():
 
     next_population = population.copy()
 
-    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(next_population, 10000, 30)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(next_population, 10000, 30, flag)
     fitness_best_board = get_fitness(best_board)
-    print(len(avg_fitness_list), fitness_best_board, 'part 1')
-    print(avg_fitness_list)
-    print(best_fitness)
-    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 1')
+    print("number of iterations:" + str(len(avg_fitness_list)) + " left to fitness:" + str(fitness_best_board) + ' part 1')
+    # print(avg_fitness_list)
+    # print(best_fitness)
+    #write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 1')
     if fitness_best_board == 0:
         print_board(best_board)
         return best_board
+    else:
+        print("No answer part 1")
 
-    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 25, True)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 25, flag, True)
     fitness_best_board = get_fitness(best_board)
-    print(len(avg_fitness_list), fitness_best_board, 'part 2')
-    print(avg_fitness_list)
-    print(best_fitness)
-    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 2')
+    print("number of iterations:" + str(len(avg_fitness_list)) + " left to fitness:" + str(fitness_best_board) + ' part 2')
+    # print(avg_fitness_list)
+    # print(best_fitness)
+    #write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 2')
     if fitness_best_board == 0:
         print_board(best_board)
         return best_board
+    else:
+        print("No answer part 2")
 
-    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 45, True)
+    best_board, avg_fitness_list, best_fitness, next_population = generation_loop(population.copy(), 10000, 45, flag, True)
     fitness_best_board = get_fitness(best_board)
-    print(len(avg_fitness_list), fitness_best_board, 'part 3')
-    print(avg_fitness_list)
-    print(best_fitness)
-    write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 3')
+    print("number of iterations:" + str(len(avg_fitness_list)) + " left to fitness:" + str(fitness_best_board) + ' part 3'
+                                                                                                                 '')
+    # print(avg_fitness_list)
+    # print(best_fitness)
+    #write_to_csv(avg_fitness_list, fitness_best_board, best_fitness, "genetic", 'part 3')
     if fitness_best_board == 0:
         print_board(best_board)
         return best_board
-
+    else:
+        print("No answer part 3")
 
 
 file = open('result.csv', 'w', newline='')
 writer = csv.writer(file)
-#####################5 easy##################################
-size_of_matrix = 5
-difficulty = "easy"
-given_digits_details = ['143']
-given_digits = len(given_digits_details)
-greater_than = ['1413', '1415', '2111', '2223', '2425', '3343', '3545', '4151', '5352']
-number_of_greater_than = len(greater_than)
+
+#####################load from file###############################
+f = open('Unnecessary.txt')
+
+
+size_of_matrix = int(f.readline().rstrip('\n'))
+#difficulty = "easy"
+given_digits = f.readline().rstrip('\n')
+given_digits_details = []
+for i in range(int(given_digits)):
+    given_digits_details.append(f.readline().rstrip('\n'))
+greater_than = []
+number_of_greater_than = f.readline().rstrip('\n')
+for j in range(int(number_of_greater_than)):
+    greater_than.append(f.readline().rstrip('\n'))
 
 init_digits_dict = {}
 set_init_digits_dict()
 generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
+for i in range(int(size_of_matrix)):
     generic_row.append(i + 1)
-print('size_of_matrix:' + str(size_of_matrix) +', dificault: easy, genetic/darwin/lemark')
-start()
+print('size_of_matrix:' + str(size_of_matrix) +' type: genetic')
+start(int(0))
+print('size_of_matrix:' + str(size_of_matrix) +' type: lemark')
+start(int(1))
+print('size_of_matrix:' + str(size_of_matrix) +' type: darwin')
+start(int(2))
 
-#####################5 tricky##################################
-size_of_matrix = 5
-difficulty = "tricky"
-
-given_digits_details = ['122', '552']
-given_digits = len(given_digits_details)
-greater_than = ['1211', '1514', '2535', '3231', '4151', '4342', '5545', '5152', '5453']
-number_of_greater_than = len(greater_than)
-
-init_digits_dict = {}
-set_init_digits_dict()
-generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
-    generic_row.append(i + 1)
-
-start()
-
-#####################6 easy##################################
-size_of_matrix = 6
-difficulty = "easy"
-
-given_digits_details = ['321', '411', '554', '614', '622', '625']
-given_digits = len(given_digits_details)
-greater_than = ['1112', '3424', '3525', '3334', '3435', '4252', '5545', '5554', '5464']
-number_of_greater_than = len(greater_than)
-init_digits_dict = {}
-set_init_digits_dict()
-generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
-    generic_row.append(i + 1)
-
-start()
-
-#####################6 tricky##################################
-size_of_matrix = 6
-difficulty = "tricky"
-
-given_digits_details = ['155', '331', '514']
-given_digits = len(given_digits_details)
-greater_than = ['2111', '2212', '2425', '3423', '2636', '3141', '3545', '4636', '4142', '4555', '5646', '5453', '6362']
-number_of_greater_than = len(greater_than)
-init_digits_dict = {}
-set_init_digits_dict()
-generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
-    generic_row.append(i + 1)
-
-start()
-
-#####################7 easy##################################
-size_of_matrix = 7
-difficulty = "easy"
-
-given_digits_details = ['116', '152']
-given_digits = len(given_digits_details)
-greater_than = ['1415', '1716', '1626', '2221', '2423', '3424', '3233', '3343', '3536', '3747', '5343', '4546','5455' \
-                , '6454', '6555', '5666', '6263', '6364', '6676', '6777', '7271', '7374', '7576']
-number_of_greater_than = len(greater_than)
-init_digits_dict = {}
-set_init_digits_dict()
-generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
-    generic_row.append(i + 1)
-
-start()
-
-#####################7 tricky##################################
-size_of_matrix = 7
-difficulty = "tricky"
-
-given_digits_details = ['175', '263', '373', '413']
-given_digits = len(given_digits_details)
-greater_than = ['1121', '1413', '1516', '2322', '3323', '3536', '4636', '5141', '4252', '4342', '4546', '5747','5251' \
-                , '5253', '5363', '5565', '5655', '6757', '6171', '6162', '7767', '7475', '7576']
-number_of_greater_than = len(greater_than)
-init_digits_dict = {}
-set_init_digits_dict()
-generic_row = []    #[1,2,3,4,5....]
-for i in range(size_of_matrix):
-    generic_row.append(i + 1)
-
-start()
+#
+# #####################5 easy##################################
+# size_of_matrix = 5
+# difficulty = "easy"
+# given_digits_details = ['143']
+# given_digits = len(given_digits_details)
+# greater_than = ['1413', '1415', '2111', '2223', '2425', '3343', '3545', '4151', '5352']
+# number_of_greater_than = len(greater_than)
+#
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+# print('size_of_matrix:' + str(size_of_matrix) +', dificault: easy, genetic/darwin/lemark')
+# start()
+#
+# #####################5 tricky##################################
+# size_of_matrix = 5
+# difficulty = "tricky"
+#
+# given_digits_details = ['122', '552']
+# given_digits = len(given_digits_details)
+# greater_than = ['1211', '1514', '2535', '3231', '4151', '4342', '5545', '5152', '5453']
+# number_of_greater_than = len(greater_than)
+#
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+#
+# start()
+#
+# #####################6 easy##################################
+# size_of_matrix = 6
+# difficulty = "easy"
+#
+# given_digits_details = ['321', '411', '554', '614', '622', '625']
+# given_digits = len(given_digits_details)
+# greater_than = ['1112', '3424', '3525', '3334', '3435', '4252', '5545', '5554', '5464']
+# number_of_greater_than = len(greater_than)
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+#
+# start()
+#
+# #####################6 tricky##################################
+# size_of_matrix = 6
+# difficulty = "tricky"
+#
+# given_digits_details = ['155', '331', '514']
+# given_digits = len(given_digits_details)
+# greater_than = ['2111', '2212', '2425', '3423', '2636', '3141', '3545', '4636', '4142', '4555', '5646', '5453', '6362']
+# number_of_greater_than = len(greater_than)
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+#
+# start()
+#
+# #####################7 easy##################################
+# size_of_matrix = 7
+# difficulty = "easy"
+#
+# given_digits_details = ['116', '152']
+# given_digits = len(given_digits_details)
+# greater_than = ['1415', '1716', '1626', '2221', '2423', '3424', '3233', '3343', '3536', '3747', '5343', '4546','5455' \
+#                 , '6454', '6555', '5666', '6263', '6364', '6676', '6777', '7271', '7374', '7576']
+# number_of_greater_than = len(greater_than)
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+#
+# start()
+#
+# #####################7 tricky##################################
+# size_of_matrix = 7
+# difficulty = "tricky"
+#
+# given_digits_details = ['175', '263', '373', '413']
+# given_digits = len(given_digits_details)
+# greater_than = ['1121', '1413', '1516', '2322', '3323', '3536', '4636', '5141', '4252', '4342', '4546', '5747','5251' \
+#                 , '5253', '5363', '5565', '5655', '6757', '6171', '6162', '7767', '7475', '7576']
+# number_of_greater_than = len(greater_than)
+# init_digits_dict = {}
+# set_init_digits_dict()
+# generic_row = []    #[1,2,3,4,5....]
+# for i in range(size_of_matrix):
+#     generic_row.append(i + 1)
+#
+# start()
 
 file.close()
+
+while(1):
+    nothing = 0
